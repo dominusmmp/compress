@@ -25,7 +25,7 @@ func main() {
 
 	flag.Parse()
 
-	noticeRequired([]string{"path"})
+	// noticeRequired([]string{"path"})
 
 	pattern := loadPattern(*projectPath, []string{".gitignore"})
 
