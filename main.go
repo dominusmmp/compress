@@ -67,10 +67,6 @@ func loadFiles(projectPath string, pattern []string) []string {
 
 	files := []string{}
 
-	// for _, p := range pattern {
-	// 	println(p)
-	// }
-
 	err := filepath.Walk(projectPath,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
@@ -78,7 +74,8 @@ func loadFiles(projectPath string, pattern []string) []string {
 			}
 
 			if !info.IsDir() {
-				files = append(files, path)
+				filePath, _ := filepath.Rel(projectPath, path)
+				files = append(files, filePath)
 			}
 
 			return nil
@@ -89,7 +86,6 @@ func loadFiles(projectPath string, pattern []string) []string {
 	}
 
 	return files
-
 }
 
 func createArchive(projectPath string, pattern []string, destinationPath string) string {
@@ -112,6 +108,8 @@ func createArchive(projectPath string, pattern []string, destinationPath string)
 	defer tw.Close()
 
 	for _, file := range files {
+
+		os.Chdir(projectPath)
 
 		file, err := os.Open(file)
 
