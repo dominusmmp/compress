@@ -25,7 +25,6 @@ func cwd() string {
 	path, err := os.Getwd()
 
 	if unexpectedPath[path] {
-		println(path)
 		log.Fatalf("%s Not Allowed!", path)
 	}
 

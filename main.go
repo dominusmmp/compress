@@ -18,7 +18,6 @@ import (
 var (
 	projectPath     = flag.String("path", cwd(), "the project path")
 	destinationPath = flag.String("dest", "/tmp", "the destination path")
-	destinationUrl  = flag.String("destUrl", "", "the destination url")
 )
 
 func main() {
