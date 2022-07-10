@@ -31,10 +31,6 @@ func main() {
 
 }
 
-func verbose(str string) {
-
-}
-
 func loadFiles() []string {
 
 	files := []string{}

@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+func verbose(str string) {
+
+}
+
 func cwd() string {
 	// unexpectedPath := []string{"/home"}
 
