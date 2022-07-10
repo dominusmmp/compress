@@ -44,7 +44,9 @@ func loadPattern(projectPath string, ignoredFiles []string) []string {
 
 		if _, err := os.Stat(projectPath); errors.Is(err, os.ErrNotExist) {
 			log.Fatalf("%s Doest not exist!", f)
-		} else if _, err := os.Stat(ignoreFilePath); err == nil {
+		}
+
+		if _, err := os.Stat(ignoreFilePath); err == nil {
 			ignoredFileStatus[f] = true
 		}
 
