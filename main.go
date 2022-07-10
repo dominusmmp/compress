@@ -16,8 +16,8 @@ import (
 )
 
 var (
-	projectPath     = flag.String("path", cwd(), "the project path")
-	destinationPath = flag.String("dest", "/tmp", "the destination path")
+	projectPath     = flag.String("path", cwd(), "project path in your computer")
+	destinationPath = flag.String("dest", os.TempDir(), "compressed file destination")
 )
 
 func main() {
