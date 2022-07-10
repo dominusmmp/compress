@@ -23,8 +23,6 @@ func main() {
 
 	flag.Parse()
 
-	// noticeRequired([]string{"path"})
-
 	pattern := loadPattern(*projectPath, []string{".gitignore"})
 
 	archivePath := createArchive(*projectPath, pattern, *destinationPath)
@@ -34,6 +32,32 @@ func main() {
 }
 
 func verbose(str string) {
+
+}
+
+func loadFiles() []string {
+
+	files := []string{}
+
+	err := filepath.Walk(".",
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+
+			if !info.IsDir() {
+				files = append(files, path)
+				println(path)
+			}
+
+			return nil
+		})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return files
 
 }
 
@@ -73,7 +97,7 @@ func createArchive(projectPath string, pattern []string, destinationPath string)
 	archiveName := strconv.Itoa(randomNum()) + ".tar.gz"
 	archivePath := filepath.Join(destinationPath, archiveName)
 
-	files := []string{filepath.Join(projectPath, "server.js"), filepath.Join(projectPath, "package.json")}
+	files := loadFiles()
 
 	tarFile, err := os.Create(archivePath)
 
@@ -112,14 +136,11 @@ func createArchive(projectPath string, pattern []string, destinationPath string)
 
 		header.Name = file.Name()
 
-		err = tw.WriteHeader(header)
-
-		if err != nil {
+		if err = tw.WriteHeader(header); err != nil {
 			log.Fatal(err)
 		}
 
-		_, err = io.Copy(tw, file)
-		if err != nil {
+		if _, err = io.Copy(tw, file); err != nil {
 			log.Fatal(err)
 		}
 	}
