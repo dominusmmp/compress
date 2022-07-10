@@ -72,9 +72,7 @@ func loadFiles(projectPath string, pattern []string) []string {
 
 	err := filepath.Walk(projectPath,
 		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
+			checkErr(err)
 
 			if !info.IsDir() {
 				filePath, _ := filepath.Rel(projectPath, path)
@@ -87,9 +85,7 @@ func loadFiles(projectPath string, pattern []string) []string {
 			return nil
 		})
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	checkErr(err)
 
 	return files
 }
@@ -102,9 +98,7 @@ func createArchive(projectPath string, pattern []string, destinationPath string)
 
 	tarFile, err := os.Create(archivePath)
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	checkErr(err)
 
 	defer tarFile.Close()
 
@@ -119,38 +113,24 @@ func createArchive(projectPath string, pattern []string, destinationPath string)
 
 		file, err := os.Open(file)
 
-		if err != nil {
-			log.Fatal(err)
-		}
+		checkErr(err)
 
 		defer file.Close()
 
 		info, err := file.Stat()
 
-		if err != nil {
-			log.Fatal(err)
-		}
+		checkErr(err)
 
 		header, err := tar.FileInfoHeader(info, info.Name())
 
-		if err != nil {
-			log.Fatal(err)
-		}
+		checkErr(err)
 
 		header.Name = file.Name()
-
-		if err = tw.WriteHeader(header); err != nil {
-			log.Fatal(err)
-		}
-
-		if _, err = io.Copy(tw, file); err != nil {
-			log.Fatal(err)
-		}
+		err = tw.WriteHeader(header)
+		checkErr(err)
+		_, err = io.Copy(tw, file)
+		checkErr(err)
 	}
 
 	return archivePath
-}
-
-func uploadArchive(archivePath string, destinationUrl string) {
-	return
 }

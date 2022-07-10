@@ -12,14 +12,24 @@ func verbose(str string) {
 
 }
 
+func checkErr(err error) {
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
 func cwd() string {
-	// unexpectedPath := []string{"/home"}
+	homeDir, _ := os.UserHomeDir()
+	unexpectedPath := map[string]bool{homeDir: true}
 
 	path, err := os.Getwd()
 
-	if err != nil {
-		log.Fatal(err)
+	if unexpectedPath[path] {
+		println(path)
+		log.Fatalf("%s Not Allowed!", path)
 	}
+
+	checkErr(err)
 
 	return path
 }
