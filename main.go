@@ -31,31 +31,6 @@ func main() {
 
 }
 
-func loadFiles(projectPath string) []string {
-
-	files := []string{}
-
-	err := filepath.Walk(projectPath,
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-
-			if !info.IsDir() {
-				files = append(files, path)
-			}
-
-			return nil
-		})
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return files
-
-}
-
 func loadPattern(projectPath string, ignoredFiles []string) []string {
 
 	data := []byte{}
@@ -88,11 +63,40 @@ func loadPattern(projectPath string, ignoredFiles []string) []string {
 	return pattern
 }
 
+func loadFiles(projectPath string, pattern []string) []string {
+
+	files := []string{}
+
+	// for _, p := range pattern {
+	// 	println(p)
+	// }
+
+	err := filepath.Walk(projectPath,
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+
+			if !info.IsDir() {
+				files = append(files, path)
+			}
+
+			return nil
+		})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return files
+
+}
+
 func createArchive(projectPath string, pattern []string, destinationPath string) string {
 	archiveName := strconv.Itoa(randomNum()) + ".tar.gz"
 	archivePath := filepath.Join(destinationPath, archiveName)
 
-	files := loadFiles(projectPath)
+	files := loadFiles(projectPath, pattern)
 
 	tarFile, err := os.Create(archivePath)
 
