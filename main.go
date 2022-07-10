@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	ignore "github.com/sabhiram/go-gitignore"
 )
 
 var (
@@ -66,6 +68,7 @@ func loadPattern(projectPath string, ignoredFiles []string) []string {
 func loadFiles(projectPath string, pattern []string) []string {
 
 	files := []string{}
+	ignoredOne := ignore.CompileIgnoreLines(pattern...)
 
 	err := filepath.Walk(projectPath,
 		func(path string, info os.FileInfo, err error) error {
@@ -75,7 +78,10 @@ func loadFiles(projectPath string, pattern []string) []string {
 
 			if !info.IsDir() {
 				filePath, _ := filepath.Rel(projectPath, path)
-				files = append(files, filePath)
+				isIgnore := ignoredOne.MatchesPath(filePath)
+				if !isIgnore {
+					files = append(files, filePath)
+				}
 			}
 
 			return nil
