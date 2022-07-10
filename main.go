@@ -7,12 +7,10 @@ import (
 	"flag"
 	"io"
 	"log"
-	"math/rand"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
-	"time"
 )
 
 var (
@@ -32,32 +30,11 @@ func main() {
 	archivePath := createArchive(*projectPath, pattern, *destinationPath)
 
 	println(archivePath)
-	// uploadArchive(archivePath, *destinationUrl)
+
 }
 
 func verbose(str string) {
 
-}
-
-func randomNum() int {
-	rSource := rand.NewSource(time.Now().UnixNano())
-	rand := rand.New(rSource)
-	return rand.Intn(999999999)
-}
-
-func noticeRequired(required []string) {
-
-	seen := map[string]bool{}
-
-	flag.Visit(func(f *flag.Flag) {
-		seen[f.Name] = true
-	})
-
-	for _, req := range required {
-		if !seen[req] {
-			log.Fatalf("missing required --%s flag \n", req)
-		}
-	}
 }
 
 func loadPattern(projectPath string, ignoredFiles []string) []string {
@@ -152,16 +129,4 @@ func createArchive(projectPath string, pattern []string, destinationPath string)
 
 func uploadArchive(archivePath string, destinationUrl string) {
 	return
-}
-
-func cwd() string {
-	// unexpectedPath := []string{"/home"}
-
-	path, err := os.Getwd()
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return path
 }
