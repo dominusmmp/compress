@@ -31,11 +31,11 @@ func main() {
 
 }
 
-func loadFiles() []string {
+func loadFiles(projectPath string) []string {
 
 	files := []string{}
 
-	err := filepath.Walk(".",
+	err := filepath.Walk(projectPath,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
@@ -43,7 +43,6 @@ func loadFiles() []string {
 
 			if !info.IsDir() {
 				files = append(files, path)
-				println(path)
 			}
 
 			return nil
@@ -93,7 +92,7 @@ func createArchive(projectPath string, pattern []string, destinationPath string)
 	archiveName := strconv.Itoa(randomNum()) + ".tar.gz"
 	archivePath := filepath.Join(destinationPath, archiveName)
 
-	files := loadFiles()
+	files := loadFiles(projectPath)
 
 	tarFile, err := os.Create(archivePath)
 
